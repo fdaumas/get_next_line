@@ -6,7 +6,7 @@
 /*   By: fdaumas <fdaumas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/27 15:26:28 by fdaumas           #+#    #+#             */
-/*   Updated: 2021/11/27 20:20:27 by fdaumas          ###   ########.fr       */
+/*   Updated: 2021/11/27 20:31:12 by fdaumas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -139,7 +139,9 @@ char	*get_next_line(int fd)
 	char		*tmp_before_fun;
 	char		*new;
 	int			verif;
+	int			index;
 
+	index = 0;
 	tmp = malloc(sizeof(char) * BUFFER_SIZE + 1);
 	tmp_before_fun = malloc(sizeof(char) * BUFFER_SIZE + 1);
 	if (!tmp)
@@ -150,7 +152,7 @@ char	*get_next_line(int fd)
 			return (NULL);
 	}
 	new = ft_strdup(tmp);
-	while (!ft_strchr(tmp, '\n'))
+	while (!ft_strchr(tmp, '\n') || !ft_strchr(tmp, '\0'))
 	{
 		verif = read(fd, tmp_before_fun, BUFFER_SIZE);
 		if (verif == 0 || verif == -1)
