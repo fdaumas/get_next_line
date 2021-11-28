@@ -6,7 +6,7 @@
 /*   By: fdaumas <fdaumas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/27 15:26:28 by fdaumas           #+#    #+#             */
-/*   Updated: 2021/11/27 20:31:12 by fdaumas          ###   ########.fr       */
+/*   Updated: 2021/11/28 15:54:54 by fdaumas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,12 +17,12 @@
 #include <stdio.h>
 #include <libc.h>
 
-size_t	ft_strlen(char *str)
+size_t	ft_strlen(char *str, char c)
 {
 	int	index;
 
 	index = 0 ;
-	while (str[index] != '\0' && str[index] != '\n')
+	while (str[index] != c)
 		index++;
 	return (index);
 }
@@ -64,24 +64,31 @@ char	*ft_strdup(char *s1)
 	return (dup);
 }
 
-size_t	ft_strlcat(char *dst, char *src, size_t dstsize)
+char	*ft_substr(char *s, unsigned int start, size_t len)
 {
 	size_t	index;
-	size_t	len_dest;
-	size_t	len_src;
+	char	*ns;
 
-	len_dest = ft_strlen(dst);
-	len_src = ft_strlen(src);
+	if (!s)
+		return (0);
 	index = 0;
-	if (dstsize < len_dest || dstsize == 0)
-		return (len_src + dstsize);
-	while (src[index] != '\0' && index + len_dest < dstsize - 1)
-	{
-		dst[len_dest + index] = src[index];
+	while (s[start + index])
 		index++;
+	if (index < len)
+		len = index;
+	ns = malloc(sizeof(char) * len + 1);
+	if (!ns)
+		return (NULL);
+	index = 0;
+	if (start > ft_strlen(s, '\0'))
+	{
+		ns[0] = '\0';
+		return (ns);
 	}
-	dst[len_dest + index] = '\0';
-	return (len_dest + len_src);
+	while (index < len && s[start])
+		ns[index++] = s[start++];
+	ns[index] = '\0';
+	return (ns);
 }
 
 size_t	ft_strlcpy(char *dst, char *src, size_t dstsize)
@@ -113,10 +120,10 @@ char	*ft_strjoin(char *s1, char *s2)
 	if (!s1 || !s2)
 		return (0);
 	index = 0;
-	ns = malloc(sizeof(char) * (ft_strlen(s1) + ft_strlen(s2) + 1));
+	ns = malloc(sizeof(char) * (ft_strlen(s1, '\0') + ft_strlen(s2, '\0') + 1));
 	if (!ns)
 		return (NULL);
-	if (ft_strlen(s1) + ft_strlen(s2) == 0)
+	if (ft_strlen(s1, '\0') + ft_strlen(s2, '\0') == 0)
 		ns[0] = '\0';
 	while (s1[index])
 	{
@@ -126,10 +133,10 @@ char	*ft_strjoin(char *s1, char *s2)
 	index = 0;
 	while (s2[index])
 	{
-		ns[index + ft_strlen(s1)] = s2[index];
+		ns[index + ft_strlen(s1, '\0')] = s2[index];
 		index++;
 	}
-	ns[index + ft_strlen(s1)] = '\0';
+	ns[index + ft_strlen(s1, '\0')] = '\0';
 	return (ns);
 }
 
@@ -139,15 +146,12 @@ char	*get_next_line(int fd)
 	char		*tmp_before_fun;
 	char		*new;
 	int			verif;
-	int			index;
 
-	index = 0;
-	tmp = malloc(sizeof(char) * BUFFER_SIZE + 1);
 	tmp_before_fun = malloc(sizeof(char) * BUFFER_SIZE + 1);
 	if (!tmp)
 	{
+		tmp = malloc(sizeof(char) * BUFFER_SIZE + 1);
 		verif = read(fd, tmp, BUFFER_SIZE);
-		printf("%s\n", tmp);
 		if (verif == 0 || verif == -1)
 			return (NULL);
 	}
@@ -157,27 +161,49 @@ char	*get_next_line(int fd)
 		verif = read(fd, tmp_before_fun, BUFFER_SIZE);
 		if (verif == 0 || verif == -1)
 			return (NULL);
+		tmp_before_fun[verif] = '\0';
 		new = ft_strjoin(tmp, tmp_before_fun);
 		free(tmp);
 		tmp = ft_strdup(new);
-		printf("%s\n", new);
 	}
 	free(tmp);
 	free(tmp_before_fun);
-/*
-** 	tmp = ft_strchr(new, '\n')
-** 	len = ft_strlcpy(tmp_before_fun, tmp, len);
-** 	tmp = ;
-** 	ft_strlcpy(new, tmp_before_fun, ft_strlen(tmp_before_fun));
-** 	new = ft_strdup(new);
-*/
-	return (new);
+	tmp = ft_substr(new, ft_strlen(new, '\n') + 1, ft_strlen(new, '\0') - 1 - ft_strlen(new, '\n') + 1);
+	tmp_before_fun = malloc(sizeof(char) * ft_strlen(new, '\n') + 1);
+	ft_strlcpy(tmp_before_fun, new, ft_strlen(new, '\n') + 1);
+	free(new);
+	if (!tmp_before_fun)
+	{
+		free(tmp);
+		free(tmp_before_fun);
+		return (NULL);
+	}
+	return (tmp_before_fun);
 }
 
 int	main(void)
 {
-	int	fd;
+	int		fd;
+	char	*test;
+	char	*lol;
+	char	*lal;
+	char	*last;
+	char	*try_wihtout;
 
 	fd = open("./test", O_RDONLY);
-	printf("%s", get_next_line(fd));
+	test = get_next_line(fd);
+	printf("final first line = %s\n", test);
+	lol = get_next_line(fd);
+	printf("final second line = %s\n", lol);
+	lal = get_next_line(fd);
+	printf("final third line = %s\n", lal);
+	last = get_next_line(fd);
+	printf("final foor line = %s\n", last);
+	try_wihtout = get_next_line(fd);
+	printf("final five line = %s\n", try_wihtout);
+	free(try_wihtout);
+	free(lol);
+	free(last);
+	free(lal);
+	free(test);
 }

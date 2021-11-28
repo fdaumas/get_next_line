@@ -6,7 +6,7 @@
 /*   By: fdaumas <fdaumas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/27 13:06:55 by fdaumas           #+#    #+#             */
-/*   Updated: 2021/11/27 15:59:22 by fdaumas          ###   ########.fr       */
+/*   Updated: 2021/11/28 15:39:53 by fdaumas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,12 +16,15 @@
 #include <unistd.h>
 #include <stdio.h>
 
-static int	fun(void)
+static void	fun(void)
 {
-	static int	count = 0;
+	static char	*count;
 
-	count++;
-	return (count);
+	if (!count)
+		count = "lol";
+	printf("%s", count);
+	count = "super";
+	count = "test";
 }
 
 int	main(void)
@@ -32,10 +35,9 @@ int	main(void)
 
 	fd = open("./test", O_RDONLY);
 	printf("%i\n", BUFFER_SIZE);
-	printf("%i\n", fun());
-	printf("%i\n", fun());
-	printf("%i\n", fun());
-	printf("%i\n", fun());
+	fun();
+	fun();
+	fun();
 	printf("fd  = %i\n", fd);
 	verif = read(fd, str, BUFFER_SIZE);
 	if (verif == 0 || verif == -1)
