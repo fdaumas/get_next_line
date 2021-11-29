@@ -6,7 +6,7 @@
 /*   By: fdaumas <fdaumas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/27 15:26:28 by fdaumas           #+#    #+#             */
-/*   Updated: 2021/11/28 15:54:54 by fdaumas          ###   ########.fr       */
+/*   Updated: 2021/11/29 02:54:15 by fdaumas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -147,34 +147,40 @@ char	*get_next_line(int fd)
 	char		*new;
 	int			verif;
 
-	tmp_before_fun = malloc(sizeof(char) * BUFFER_SIZE + 1);
 	if (!tmp)
 	{
 		tmp = malloc(sizeof(char) * BUFFER_SIZE + 1);
 		verif = read(fd, tmp, BUFFER_SIZE);
 		if (verif == 0 || verif == -1)
 			return (NULL);
+		tmp[verif] = '\0';
 	}
 	new = ft_strdup(tmp);
 	while (!ft_strchr(tmp, '\n') || !ft_strchr(tmp, '\0'))
 	{
+		tmp_before_fun = malloc(sizeof(char) * BUFFER_SIZE + 1);
 		verif = read(fd, tmp_before_fun, BUFFER_SIZE);
 		if (verif == 0 || verif == -1)
+		{
+			free(new);
+			free(tmp_before_fun);
 			return (NULL);
+		}
 		tmp_before_fun[verif] = '\0';
+		free(new);
 		new = ft_strjoin(tmp, tmp_before_fun);
+		free(tmp_before_fun);
 		free(tmp);
 		tmp = ft_strdup(new);
 	}
 	free(tmp);
-	free(tmp_before_fun);
-	tmp = ft_substr(new, ft_strlen(new, '\n') + 1, ft_strlen(new, '\0') - 1 - ft_strlen(new, '\n') + 1);
-	tmp_before_fun = malloc(sizeof(char) * ft_strlen(new, '\n') + 1);
-	ft_strlcpy(tmp_before_fun, new, ft_strlen(new, '\n') + 1);
+	tmp = ft_substr(new, ft_strlen(new, '\n')
+			+ 1, ft_strlen(new, '\0') - ft_strlen(new, '\n'));
+	tmp_before_fun = malloc(sizeof(char) * ft_strlen(new, '\n') + 2);
+	ft_strlcpy(tmp_before_fun, new, ft_strlen(new, '\n') + 2);
 	free(new);
 	if (!tmp_before_fun)
 	{
-		free(tmp);
 		free(tmp_before_fun);
 		return (NULL);
 	}
@@ -190,20 +196,20 @@ int	main(void)
 	char	*last;
 	char	*try_wihtout;
 
-	fd = open("./test", O_RDONLY);
+	fd = open("./test_void", O_RDONLY);
 	test = get_next_line(fd);
 	printf("final first line = %s\n", test);
+	free(test);
 	lol = get_next_line(fd);
 	printf("final second line = %s\n", lol);
+	free(lol);
 	lal = get_next_line(fd);
 	printf("final third line = %s\n", lal);
+	free(lal);
 	last = get_next_line(fd);
 	printf("final foor line = %s\n", last);
+	free(last);
 	try_wihtout = get_next_line(fd);
 	printf("final five line = %s\n", try_wihtout);
 	free(try_wihtout);
-	free(lol);
-	free(last);
-	free(lal);
-	free(test);
 }
