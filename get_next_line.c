@@ -6,7 +6,7 @@
 /*   By: fdaumas <fdaumas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/27 15:26:28 by fdaumas           #+#    #+#             */
-/*   Updated: 2021/11/30 19:23:21 by fdaumas          ###   ########.fr       */
+/*   Updated: 2021/11/30 19:31:24 by fdaumas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,8 +64,7 @@ char	*get_next_line(int fd)
 		buff[verif] = '\0';
 		line = ft_strjoin(line, buff);
 	}
-	if (line)
-		save = ft_substr(line, ft_strlen(line, '\n') + 1,
+	save = ft_substr(line, ft_strlen(line, '\n') + 1,
 				ft_strlen(line, '\0') - ft_strlen(line, '\n') + 2);
 	if (ft_strlen(save, '\0') == 0 && ft_strlen(line, '\0') == 0)
 	{
