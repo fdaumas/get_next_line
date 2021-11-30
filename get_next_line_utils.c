@@ -6,7 +6,7 @@
 /*   By: fdaumas <fdaumas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/29 09:36:24 by fdaumas           #+#    #+#             */
-/*   Updated: 2021/11/29 09:44:05 by fdaumas          ###   ########.fr       */
+/*   Updated: 2021/11/30 17:51:27 by fdaumas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,8 @@ char	*ft_strdup(char *s1)
 	int		index;
 	char	*dup;
 
+	if (s1 == NULL)
+		return (NULL);
 	index = 0;
 	while (s1[index])
 		index++;

@@ -6,7 +6,7 @@
 /*   By: fdaumas <fdaumas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/27 13:06:55 by fdaumas           #+#    #+#             */
-/*   Updated: 2021/11/29 13:08:23 by fdaumas          ###   ########.fr       */
+/*   Updated: 2021/11/30 18:54:59 by fdaumas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ int	main(void)
 	printf("%s", str);
 }
 
-//char	*get_next_line(int fd)
+/*char	*get_next_line(int fd)
 {
 	static char	*tmp = NULL;
 	char		*tmp_before_fun;
@@ -97,7 +97,7 @@ int	main(void)
 	return (tmp_before_fun);
 }
 
-//char	*get_next_line(int fd)
+char	*get_next_line(int fd)
 {
 	static char	*tmp = NULL;
 	char		buf[BUFFER_SIZE + 1];
@@ -137,3 +137,4 @@ int	main(void)
 	free(join);
 	return (new);
 }
+*/
