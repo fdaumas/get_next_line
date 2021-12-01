@@ -6,7 +6,7 @@
 /*   By: fdaumas <fdaumas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/29 09:36:24 by fdaumas           #+#    #+#             */
-/*   Updated: 2021/11/30 17:51:27 by fdaumas          ###   ########.fr       */
+/*   Updated: 2021/12/01 14:50:02 by fdaumas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ size_t	ft_strlen(char *str, char c)
 	int	index;
 
 	index = 0 ;
-	while (str[index] != c)
+	while (str[index] != c && str[index])
 		index++;
 	return (index);
 }
@@ -26,6 +26,8 @@ char	*ft_strchr(char *s, int c)
 {
 	size_t	index;
 
+	if (s == NULL || ft_strlen(s, '\0') == 0)
+		return (NULL);
 	index = 0;
 	while (s[index] != '\0')
 	{
@@ -44,7 +46,11 @@ char	*ft_strdup(char *s1)
 	char	*dup;
 
 	if (s1 == NULL)
-		return (NULL);
+	{
+		dup = malloc(sizeof(char));
+		dup[0] = '\0';
+		return (dup);
+	}
 	index = 0;
 	while (s1[index])
 		index++;

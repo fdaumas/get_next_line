@@ -6,7 +6,7 @@
 /*   By: fdaumas <fdaumas@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/27 15:26:28 by fdaumas           #+#    #+#             */
-/*   Updated: 2021/11/30 19:31:24 by fdaumas          ###   ########.fr       */
+/*   Updated: 2021/12/01 15:08:36 by fdaumas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,44 +37,54 @@ char	*ft_strjoin(char *s1, char *s2)
 	return (ns);
 }
 
-char	*a_line(char *line)
+char	*a_line(char *line, char c)
 {
 	char	*a_line;
 
-	a_line = malloc(sizeof(char) * ft_strlen(line, '\n') + 2);
-	ft_strlcpy(a_line, line, ft_strlen(line, '\n') + 2);
+	a_line = malloc(sizeof(char) * ft_strlen(line, c) + 2);
+	ft_strlcpy(a_line, line, ft_strlen(line, c) + 2);
 	free(line);
 	return (a_line);
 }
 
+char	*start(char *before)
+{
+	char	*save;
+
+	save = ft_strdup(before);
+	free(before);
+	return (save);
+}
+
 char	*get_next_line(int fd)
 {
-	static char	*save = NULL;
+	static char	*before = NULL;
 	char		buff[BUFFER_SIZE + 1];
-	char		*line;
+	char		*save;
 	int			verif;
 
-	line = ft_strdup(save);
+	if (read(fd, buff, 0) < 0)
+		return (NULL);
+	save = start(before);
 	verif = 1;
-	while (verif > 0)
+	while (verif != 0 && !ft_strchr(save, '\n'))
 	{
 		verif = read(fd, buff, BUFFER_SIZE);
 		if (verif <= 0)
 			break ;
 		buff[verif] = '\0';
-		line = ft_strjoin(line, buff);
+		save = ft_strjoin(save, buff);
 	}
-	save = ft_substr(line, ft_strlen(line, '\n') + 1,
-				ft_strlen(line, '\0') - ft_strlen(line, '\n') + 2);
-	if (ft_strlen(save, '\0') == 0 && ft_strlen(line, '\0') == 0)
+	if (ft_strlen(save, '\0') == 0 || save == NULL)
 	{
 		free(save);
-		free(line);
 		return (NULL);
 	}
-	return (a_line(line));
+	before = ft_substr(save, ft_strlen(save, '\n')
+			+ 1, ft_strlen(save, '\0') - ft_strlen(save, '\n'));
+	return (a_line(save, '\n'));
 }
-
+/*
 int	main(void)
 {
 	int		fd;
@@ -110,3 +120,4 @@ int	main(void)
 	printf("final eight line = %s\n", try_wihtout);
 	free(try_wihtout);
 }
+*/
